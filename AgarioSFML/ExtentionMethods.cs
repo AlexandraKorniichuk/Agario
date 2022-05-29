@@ -3,7 +3,7 @@ using System;
 
 namespace AgarioSFML
 {
-    public class VectorMethods
+    public class ExtentionMethods
     {
         public static Vector2f ClaculateDirection(Vector2f start, Vector2f end) =>
             end - start;
@@ -39,5 +39,8 @@ namespace AgarioSFML
 
         public static float MakeBiggerIfSmaller(float num1, float num2) =>
             num1 < num2 ? num2 : num1;
+
+        public static float CalculateVectorY(float X, float length) =>
+            (float)Math.Sqrt(length * length - X * X);
     }
 }

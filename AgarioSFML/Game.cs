@@ -46,8 +46,8 @@ namespace AgarioSFML
             {
                 Window.DispatchEvents();
 
-                Vector2f MousePosition = InputController.GetMousePosition(Window);
-                Player.circle.ChangeDirection(MousePosition);
+                Vector2f mousePosition = InputController.GetMousePosition(Window);
+                ChangeDirections(mousePosition);
                 Move();
                 Draw();
                 Wait();
@@ -57,9 +57,18 @@ namespace AgarioSFML
             } while (!IsEndGame());
         }
 
+        private void ChangeDirections(Vector2f mousePosition)
+        {
+            Player.circle.ChangeDirection(mousePosition);
+            foreach (Circle bot in Bots)
+                bot.ChangeRandomDirection();
+        }
+
         private void Move()
         {
             Player.circle.MoveCircle();
+            foreach (Circle bot in Bots)
+                bot.MoveCircle();
         }
 
         private void Draw()

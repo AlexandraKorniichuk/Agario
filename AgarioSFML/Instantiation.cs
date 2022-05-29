@@ -12,6 +12,7 @@ namespace AgarioSFML
             Circle circle = new Circle();
             circle.CreateCircle((int)radius);
             circle.SetPosition(position);
+            circle.SetSpeed();
             ObjectsToDraw.Add(circle);
 
             return circle;
@@ -27,10 +28,16 @@ namespace AgarioSFML
             return objects;
         }
 
-        public Text CreateText()
+        public static Text CreateText(uint size, string mass)
         {
-            Text text = new Text();
-
+            Text text = new Text
+            {
+                DisplayedString = $"Highest mass {mass}",
+                CharacterSize = size,
+                Position = new Vector2f(Game.Width / 2 - size, Game.Heigh / 2),
+                Font = new Font("BasicText.ttf"),
+                FillColor = Color.Yellow
+            };
             return text;
         }
     }

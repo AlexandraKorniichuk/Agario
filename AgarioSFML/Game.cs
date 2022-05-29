@@ -35,6 +35,7 @@ namespace AgarioSFML
             FoodObjects = Instantiation.CreateObjectsList<Circle>(ObjectsToDraw, FoodAmount, Radius.Food);
             Bots = Instantiation.CreateObjectsList<Circle>(ObjectsToDraw, BotsAmount, Radius.Bot);
             Player.circle = (Circle)Instantiation.CreateCircleObject(ObjectsToDraw, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
+            Mouse.SetPosition((Vector2i)Player.circle.Position, Window);
 
             GameLoop();
         }
@@ -45,12 +46,20 @@ namespace AgarioSFML
             {
                 Window.DispatchEvents();
 
+                Vector2f MousePosition = InputController.GetMousePosition(Window);
+                Player.circle.ChangeDirection(MousePosition);
+                Move();
                 Draw();
                 Wait();
 
                 Window.Display();
                 Window.Clear();
             } while (!IsEndGame());
+        }
+
+        private void Move()
+        {
+            Player.circle.MoveCircle();
         }
 
         private void Draw()
@@ -70,7 +79,7 @@ namespace AgarioSFML
 
         public void DrawResults()
         {
-            Text ResultText = CreateResults();
+            Text ResultText = Instantiation.CreateText(40, "");
 
             while (!InputController.IsEnterPressed())
             {
@@ -78,21 +87,6 @@ namespace AgarioSFML
                 Window.Display();
                 Window.Clear();
             }
-        }
-
-        private Text CreateResults()
-        {
-            const uint Size = 40;
-            string Mass = "";
-            Text ResultText = new Text
-            {
-                DisplayedString = $"Highest mass {Mass}",
-                CharacterSize = Size,
-                Position = new Vector2f(Width / 2 - 5 * Size, Heigh / 2),
-                Font = new Font("BasicText.ttf"),
-                FillColor = Color.Yellow
-            };
-            return ResultText;
         }
     }
 }

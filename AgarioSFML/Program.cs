@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SFML.Graphics;
+using SFML.Window;
+using System;
 
 namespace AgarioSFML
 {
@@ -10,6 +8,17 @@ namespace AgarioSFML
     {
         static void Main(string[] args)
         {
+            RenderWindow window = new RenderWindow(new VideoMode(Game.Width, Game.Heigh), "Agario");
+            window.Closed += WindowClosed;
+            Game game = new Game(window);
+            game.StartNewGame();
+            game.DrawResults();
+        }
+
+        static void WindowClosed(object sender, EventArgs e)
+        {
+            RenderWindow w = (RenderWindow)sender;
+            w.Close();
         }
     }
 }

@@ -7,10 +7,11 @@ using System.Collections.Generic;
 
 namespace AgarioSFML
 {
-    internal class Game
+    public class Game
     {
         private GamePlayer Player;
         public List<Drawable> ObjectsToDraw;
+        public List<Drawable> ObjectsCanEat;
         private List<Circle> FoodObjects;
         private List<Circle> Bots;
 
@@ -28,13 +29,14 @@ namespace AgarioSFML
             Window = window;
             Player = new GamePlayer();
             ObjectsToDraw = new List<Drawable>();
+            ObjectsCanEat = new List<Drawable>();
         }
 
         public void StartNewGame()
         {
-            FoodObjects = Instantiation.CreateObjectsList<Circle>(ObjectsToDraw, FoodAmount, Radius.Food);
-            Bots = Instantiation.CreateObjectsList<Circle>(ObjectsToDraw, BotsAmount, Radius.Bot);
-            Player.circle = (Circle)Instantiation.CreateCircleObject(ObjectsToDraw, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
+            FoodObjects = Instantiation.CreateObjectsList<Circle>(this, FoodAmount, Radius.Food);
+            Bots = Instantiation.CreateObjectsList<Circle>(this, BotsAmount, Radius.Bot, true);
+            Player.circle = (Circle)Instantiation.CreateCircleObject(this, Radius.Player, new Vector2f (Width / 2, Heigh / 2), true);
             Mouse.SetPosition((Vector2i)Player.circle.Position, Window);
 
             GameLoop();
@@ -49,6 +51,8 @@ namespace AgarioSFML
                 Vector2f mousePosition = InputController.GetMousePosition(Window);
                 ChangeDirections(mousePosition);
                 Move();
+                DecreaseSize();
+                CheckForEating();
                 Draw();
                 Wait();
 
@@ -69,6 +73,18 @@ namespace AgarioSFML
             Player.circle.MoveCircle();
             foreach (Circle bot in Bots)
                 bot.MoveCircle();
+        }
+
+        private void DecreaseSize()
+        {
+            foreach (Circle eater in ObjectsCanEat)
+                eater.DecreaseRadius();
+        }
+
+        private void CheckForEating()
+        {
+            foreach (Circle eater in ObjectsCanEat) ;
+                //
         }
 
         private void Draw()

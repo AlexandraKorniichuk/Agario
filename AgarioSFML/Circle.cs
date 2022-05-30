@@ -2,7 +2,6 @@
 using SFML.System;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace AgarioSFML
 {
@@ -11,14 +10,15 @@ namespace AgarioSFML
     {
         Player = 30,
         Bot = 20,
-        Food = 5
+        Food = 5,
+        Min = 15
     }
 
     public class Circle : CircleShape
     {
         public Vector2f Direction;
         public float DistancePerMove;
-        private const int MovesToChangeDirection = 10;
+        private const int MovesToChangeDirection = 20;
         private int Moves;
 
         private static Random random = new Random();
@@ -50,9 +50,16 @@ namespace AgarioSFML
             }
             Position = position;
         }
+
         public void SetSpeed()
         {
             DistancePerMove = 1 / Radius * 100;
+        }
+
+        public void DecreaseRadius()
+        {
+            if (Radius <= (int)AgarioSFML.Radius.Min) return;
+            Radius *= 0.999f;
         }
 
         public void ChangeDirection(Vector2f endPosition)
@@ -64,7 +71,7 @@ namespace AgarioSFML
         {
             if (Moves != MovesToChangeDirection) return;
             Moves = 0;
-
+            
             float X = random.Next(-(int)DistancePerMove, (int)DistancePerMove);
             float Y = ExtentionMethods.CalculateVectorY(X, DistancePerMove);
 

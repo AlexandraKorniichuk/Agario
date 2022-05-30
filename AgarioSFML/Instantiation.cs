@@ -7,36 +7,34 @@ namespace AgarioSFML
 {
     public class Instantiation
     {
-        public static Drawable CreateCircleObject(Game game, Radius radius, Vector2f position = new Vector2f(), bool CanEat = false)
+        public static Drawable CreateCircleObject(Game game, Radius radius, Vector2f position = new Vector2f())
         {
             Circle circle = new Circle();
             circle.CreateCircle((int)radius);
             circle.SetPosition(position);
-            circle.SetSpeed();
-            game.ObjectsToDraw.Add(circle);
-            if (CanEat)
-                game.ObjectsCanEat.Add(circle);
+            circle.SetSpeedAndAnchor();
+            game.DrawableObjects.Add(circle);
 
             return circle;
         }
 
-        public static List<T> CreateObjectsList<T>(Game game, int itemsAmount, Radius radius, bool CanEat = false)
+        public static List<T> CreateObjectsList<T>(Game game, int itemsAmount, Radius radius)
         {
             List<T> objects = new List<T>(itemsAmount);
 
             for (int i = 0; i < itemsAmount; i++)
-                objects.Add((T)CreateCircleObject(game, radius, CanEat: CanEat));
+                objects.Add((T)CreateCircleObject(game, radius));
 
             return objects;
         }
 
-        public static Text CreateText(uint size, string mass)
+        public static Text CreateText(uint size, string displyedText)
         {
             Text text = new Text
             {
-                DisplayedString = $"Highest mass {mass}",
+                DisplayedString = displyedText,
                 CharacterSize = size,
-                Position = new Vector2f(Game.Width / 2 - size, Game.Heigh / 2),
+                Position = new Vector2f(Game.Width / 2 - 5 * size, Game.Heigh / 2),
                 Font = new Font("BasicText.ttf"),
                 FillColor = Color.Yellow
             };

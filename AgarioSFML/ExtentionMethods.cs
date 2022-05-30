@@ -42,5 +42,15 @@ namespace AgarioSFML
 
         public static float CalculateVectorY(float X, float length) =>
             (float)Math.Sqrt(length * length - X * X);
+
+        public static float CalculateSquaredDistance(Vector2f from, Vector2f to)
+        {
+            float dx = from.X - to.X;
+            float dy = from.Y - to.Y;
+            return dx * dx + dy * dy;
+        }
+
+        public static float CalculateNewRadius(float radius1, float radius2) =>
+            (float)Math.Sqrt(radius1 * radius1 + radius2 * radius2);
     }
 }

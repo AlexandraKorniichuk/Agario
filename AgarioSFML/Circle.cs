@@ -10,14 +10,14 @@ namespace AgarioSFML
     {
         Player = 30,
         Bot = 20,
-        Food = 5,
-        Min = 15
+        Food = 7,
+        Min = 20
     }
 
     public class Circle : CircleShape
     {
-        public Vector2f Direction;
-        public float DistancePerMove;
+        private Vector2f Direction;
+        private float DistancePerMove;
         private const int MovesToChangeDirection = 20;
         private int Moves;
 
@@ -45,21 +45,37 @@ namespace AgarioSFML
         {
             if (position.X == 0 && position.Y == 0)
             {
-                position.X = random.Next((int)Radius, (int)(Game.Width - Radius));
-                position.Y = random.Next((int)Radius, (int)(Game.Heigh - Radius));
+                SetRandomPosition();
+                return;
             }
             Position = position;
         }
 
-        public void SetSpeed()
+        public void SetRandomPosition()
+        {
+            Vector2f position = new Vector2f();
+            position.X = random.Next((int)Radius, (int)(Game.Width - Radius));
+            position.Y = random.Next((int)Radius, (int)(Game.Heigh - Radius));
+            Position = position;
+        }
+
+        public void SetSpeedAndAnchor()
         {
             DistancePerMove = 1 / Radius * 100;
+            Origin = new Vector2f(Radius, Radius);
         }
 
         public void DecreaseRadius()
         {
             if (Radius <= (int)AgarioSFML.Radius.Min) return;
             Radius *= 0.999f;
+            SetSpeedAndAnchor();
+        }
+
+        public void IncreaseRadius(float radius)
+        {
+            Radius = ExtentionMethods.CalculateNewRadius(Radius, radius);
+            SetSpeedAndAnchor();
         }
 
         public void ChangeDirection(Vector2f endPosition)
@@ -113,6 +129,13 @@ namespace AgarioSFML
             vector.Y = ExtentionMethods.MakeBiggerIfSmaller(vector.Y, Radius);
 
             Position = vector;
+        }
+
+        public bool IsObjectInside(Circle circle)
+        {
+            if (Radius < circle.Radius) return false;
+            float SquaredDistance = ExtentionMethods.CalculateSquaredDistance(Position, circle.Position);
+            return SquaredDistance <= (Radius - circle.Radius) * (Radius - circle.Radius);
         }
     }
 }

@@ -88,7 +88,7 @@ namespace AgarioSFML
         {
             EatFood(eater);
             EatBot(eater);
-            EatPlayer(eater);
+            Player.EatPlayer(eater);
         }
 
         private void EatFood(Circle eater)
@@ -114,15 +114,6 @@ namespace AgarioSFML
                     DrawableObjects.RemoveAt(i);
                     Bots.Remove(Bots[i]);
                 }
-            }
-        }
-
-        private void EatPlayer(Circle eater)
-        {
-            if (eater != Player.circle && eater.IsObjectInside(Player.circle))
-            {
-                Player.circle = null;
-                DrawableObjects.Remove(Player.circle);
             }
         }
 

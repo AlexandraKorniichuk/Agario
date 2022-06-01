@@ -5,7 +5,7 @@
         public Circle circle;
 
         public bool HasPlayerLost() =>
-            circle == null;
+            circle == null || circle.FoodEaten == Game.FoodAmount;
 
         public void EatPlayer(Circle eater)
         {

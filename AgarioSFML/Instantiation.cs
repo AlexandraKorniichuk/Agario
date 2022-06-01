@@ -28,15 +28,16 @@ namespace AgarioSFML
             return objects;
         }
 
-        public static Text CreateText(uint size, string displyedText)
+        public static Text CreateText(uint size, string displyedText, Color color, float positionHeigh)
         {
             Text text = new Text
             {
                 DisplayedString = displyedText,
                 CharacterSize = size,
-                Position = new Vector2f(Game.Width / 2 - 5 * size, Game.Heigh / 2),
+                Origin = new Vector2f(displyedText.Length / 2 * size / 2, size / 2),
+                Position = new Vector2f(Game.Width / 2, positionHeigh),
                 Font = new Font("BasicText.ttf"),
-                FillColor = Color.Yellow
+                FillColor = color
             };
             return text;
         }

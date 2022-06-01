@@ -21,11 +21,14 @@ namespace AgarioSFML
         private const int MovesToChangeDirection = 20;
         private int Moves;
 
+        public int FoodEaten { get; private set; }
+
         private static Random random = new Random();
 
         public Circle()
         {
             Moves = 0;
+            FoodEaten = 0;
         }
 
         private List<Color> colors = new List<Color>()
@@ -137,5 +140,8 @@ namespace AgarioSFML
             float SquaredDistance = ExtentionMethods.CalculateSquaredDistance(Position, circle.Position);
             return SquaredDistance <= (Radius - circle.Radius) * (Radius - circle.Radius);
         }
+
+        public void IncreaseFoodEaten() =>
+            FoodEaten++;
     }
 }

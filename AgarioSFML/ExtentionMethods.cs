@@ -34,10 +34,10 @@ namespace AgarioSFML
         private static float CheckForDifferentSigns(float num1, float num2) =>
             num1 * num2 < 0 ? -1 * num1 : num1;
 
-        public static float MakeSmallerIfBigger(float num1, float num2) =>
+        public static float Min(float num1, float num2) =>
             num1 > num2 ? num2 : num1;
 
-        public static float MakeBiggerIfSmaller(float num1, float num2) =>
+        public static float Max(float num1, float num2) =>
             num1 < num2 ? num2 : num1;
 
         public static float CalculateVectorY(float X, float length) =>

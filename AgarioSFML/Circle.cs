@@ -125,11 +125,11 @@ namespace AgarioSFML
         {
             Vector2f vector = new Vector2f(Position.X, Position.Y);
 
-            vector.X = ExtentionMethods.MakeSmallerIfBigger(vector.X, Game.Width - Radius);
-            vector.X = ExtentionMethods.MakeBiggerIfSmaller(vector.X, Radius);
+            vector.X = ExtentionMethods.Min(vector.X, Game.Width - Radius);
+            vector.X = ExtentionMethods.Max(vector.X, Radius);
 
-            vector.Y = ExtentionMethods.MakeSmallerIfBigger(vector.Y, Game.Heigh - Radius);
-            vector.Y = ExtentionMethods.MakeBiggerIfSmaller(vector.Y, Radius);
+            vector.Y = ExtentionMethods.Min(vector.Y, Game.Heigh - Radius);
+            vector.Y = ExtentionMethods.Max(vector.Y, Radius);
 
             Position = vector;
         }

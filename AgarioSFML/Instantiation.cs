@@ -9,8 +9,7 @@ namespace AgarioSFML
     {
         public static Drawable CreateCircleObject(Game game, Radius radius, Vector2f position = new Vector2f())
         {
-            Circle circle = new Circle();
-            circle.CreateCircle((int)radius);
+            Circle circle = new Circle((int) radius);
             circle.SetPosition(position);
             circle.SetSpeedAndAnchor();
             game.DrawableObjects.Add(circle);

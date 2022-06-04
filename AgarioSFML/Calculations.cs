@@ -3,7 +3,7 @@ using System;
 
 namespace AgarioSFML
 {
-    public class ExtentionMethods
+    public class Calculations
     {
         public static Vector2f ClaculateDirection(Vector2f start, Vector2f end) =>
             end - start;

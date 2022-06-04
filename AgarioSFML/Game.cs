@@ -9,6 +9,7 @@ namespace AgarioSFML
     public class Game
     {
         private GamePlayer Player;
+        private Circle PlayerCircle;
         public List<Drawable> DrawableObjects;
         private List<Circle> FoodObjects;
         private List<Circle> Bots;
@@ -30,10 +31,11 @@ namespace AgarioSFML
             Bots = Instantiation.CreateObjectsList<Circle>(this, BotsAmount, Radius.Bot);
             FoodObjects = Instantiation.CreateObjectsList<Circle>(this, FoodAmount, Radius.Food);
             Player.circle = (Circle)Instantiation.CreateCircleObject(this, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
+            PlayerCircle = Player.circle;
             TextInGame = Instantiation.CreateText(20, DefineFoodAndBotText(), Color.White, 30);
             DrawableObjects.Add(TextInGame);
 
-            Mouse.SetPosition((Vector2i)Player.circle.Position, Window);
+            Mouse.SetPosition((Vector2i)PlayerCircle.Position, Window);
 
             GameLoop();
         }
@@ -60,28 +62,28 @@ namespace AgarioSFML
 
         private void ChangeDirections(Vector2f mousePosition)
         {
-            Player.circle.ChangeDirection(mousePosition);
+            PlayerCircle.ChangeDirection(mousePosition);
             foreach (Circle bot in Bots)
                 bot.ChangeRandomDirection();
         }
 
         private void Move()
         {
-            Player.circle.MoveCircle();
+            PlayerCircle.MoveCircle();
             foreach (Circle bot in Bots)
                 bot.MoveCircle();
         }
 
         private void DecreaseSize()
         {
-            Player.circle.DecreaseRadius();
+            PlayerCircle.DecreaseRadius();
             foreach (Circle bot in Bots)
                 bot.DecreaseRadius();
         }
 
         private void CheckForEating()
         {
-            Eat(Player.circle);
+            Eat(PlayerCircle);
             for (int i = 0; i < Bots.Count; i++)
             {
                 Eat(Bots[i]);
@@ -146,7 +148,7 @@ namespace AgarioSFML
         public void DrawResults()
         {
             string resultText = DefineResultText();
-            Text ResultText = Instantiation.CreateText(40, resultText, Player.circle.FillColor, Heigh / 2 - 40);
+            Text ResultText = Instantiation.CreateText(40, resultText, PlayerCircle.FillColor, Heigh / 2 - 40);
             string foodEatenText = DefineFoodAndBotText();
             Text FoodEatenText = Instantiation.CreateText(40, foodEatenText, Color.White, Heigh / 2 + 40);
 
@@ -167,6 +169,6 @@ namespace AgarioSFML
         }
 
         private string DefineFoodAndBotText() =>
-            $"Food eaten: {Player.circle.FoodEaten}, Bots left: {Bots.Count}";
+            $"Food eaten: {PlayerCircle.FoodEaten}, Bots left: {Bots.Count}";
     }
 }

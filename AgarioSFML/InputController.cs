@@ -9,7 +9,7 @@ namespace AgarioSFML
         public static Vector2f GetMousePosition(RenderWindow Window) =>
             (Vector2f)Mouse.GetPosition(Window);
 
-        public static bool IsEnterPressed() =>
-            Keyboard.IsKeyPressed(Keyboard.Key.Enter);
+        public static bool IsButtonPressed(Keyboard.Key key) =>
+            Keyboard.IsKeyPressed(key);
     }
 }

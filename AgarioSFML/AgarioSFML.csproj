@@ -59,10 +59,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Circle.cs" />
+    <Compile Include="EatableObject.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="GamePlayer.cs" />
     <Compile Include="InputController.cs" />
     <Compile Include="Instantiation.cs" />
+    <Compile Include="PredatorObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Calculations.cs" />

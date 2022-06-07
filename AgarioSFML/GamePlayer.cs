@@ -2,17 +2,9 @@
 {
     public class GamePlayer
     {
-        public Circle circle;
+        public PredatorObject Predator;
 
         public bool HasPlayerLost() =>
-            circle == null || circle.FoodEaten == Game.FoodAmount;
-
-        public void EatPlayer(Circle eater)
-        {
-            if (eater != circle && eater.IsObjectInside(circle))
-            {
-                circle = null;
-            }
-        }
+            Predator == null || Predator.FoodEaten == Game.FoodAmount;
     }
 }

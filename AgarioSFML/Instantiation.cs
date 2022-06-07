@@ -7,9 +7,10 @@ namespace AgarioSFML
 {
     public class Instantiation
     {
-        public static Drawable CreateCircleObject(Game game, Radius radius, Vector2f position = new Vector2f())
+        public static T CreateCircleObject<T>(Game game, Radius radius, Vector2f? position = null) where T : Circle, new()
         {
-            Circle circle = new Circle((int) radius);
+            T circle = new T();
+            circle.CreateCircle((int)radius);
             circle.SetPosition(position);
             circle.SetSpeedAndAnchor();
             game.DrawableObjects.Add(circle);
@@ -17,12 +18,12 @@ namespace AgarioSFML
             return circle;
         }
 
-        public static List<T> CreateObjectsList<T>(Game game, int itemsAmount, Radius radius)
+        public static List<T> CreateObjectsList<T>(Game game, int itemsAmount, Radius radius) where T : Circle, new()
         {
-            List<T> objects = new List<T>(itemsAmount);
+            List<T> objects = new List<T>();
 
             for (int i = 0; i < itemsAmount; i++)
-                objects.Add((T)CreateCircleObject(game, radius));
+                objects.Add(CreateCircleObject<T>(game, radius));
 
             return objects;
         }

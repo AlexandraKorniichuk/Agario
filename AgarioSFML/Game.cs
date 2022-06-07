@@ -3,16 +3,17 @@ using SFML.Graphics;
 using SFML.Window;
 using System.Threading;
 using System.Collections.Generic;
+using System;
 
 namespace AgarioSFML
 {
     public class Game
     {
         private GamePlayer Player;
-        private Circle PlayerCircle;
+        private PredatorObject PlayerPredator;
         public List<Drawable> DrawableObjects;
-        private List<Circle> FoodObjects;
-        private List<Circle> Bots;
+        private List<EatableObject> FoodObjects;
+        private List<PredatorObject> Predators;
         private Text TextInGame;
 
         private RenderWindow Window;
@@ -28,14 +29,15 @@ namespace AgarioSFML
 
         public void StartNewGame()
         {
-            Bots = Instantiation.CreateObjectsList<Circle>(this, BotsAmount, Radius.Bot);
-            FoodObjects = Instantiation.CreateObjectsList<Circle>(this, FoodAmount, Radius.Food);
-            Player.circle = (Circle)Instantiation.CreateCircleObject(this, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
-            PlayerCircle = Player.circle;
+            Predators = Instantiation.CreateObjectsList<PredatorObject>(this, BotsAmount, Radius.Bot);
+            FoodObjects = Instantiation.CreateObjectsList<EatableObject>(this, FoodAmount, Radius.Food);
+            Player.Predator = Instantiation.CreateCircleObject<PredatorObject>(this, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
+            PlayerPredator = Player.Predator;
+            Predators.Add(PlayerPredator);
             TextInGame = Instantiation.CreateText(20, DefineFoodAndBotText(), Color.White, 30);
             DrawableObjects.Add(TextInGame);
 
-            Mouse.SetPosition((Vector2i)PlayerCircle.Position, Window);
+            Mouse.SetPosition((Vector2i)PlayerPredator.Position, Window);
 
             GameLoop();
         }
@@ -47,9 +49,7 @@ namespace AgarioSFML
                 Window.DispatchEvents();
 
                 Vector2f mousePosition = InputController.GetMousePosition(Window);
-                ChangeDirections(mousePosition);
-                Move();
-                DecreaseSize();
+                UpdatePredators(mousePosition);
                 CheckForEating();
                 SetTextInGameString();
                 Draw();
@@ -60,68 +60,60 @@ namespace AgarioSFML
             } while (!IsEndGame());
         }
 
-        private void ChangeDirections(Vector2f mousePosition)
+        private void UpdatePredators(Vector2f mousePosition)
         {
-            PlayerCircle.ChangeDirection(mousePosition);
-            foreach (Circle bot in Bots)
-                bot.ChangeRandomDirection();
-        }
-
-        private void Move()
-        {
-            PlayerCircle.MoveCircle();
-            foreach (Circle bot in Bots)
-                bot.MoveCircle();
-        }
-
-        private void DecreaseSize()
-        {
-            PlayerCircle.DecreaseRadius();
-            foreach (Circle bot in Bots)
-                bot.DecreaseRadius();
+            foreach (PredatorObject predator in Predators)
+            {
+                Vector2f? endPosition = null;
+                if (predator == PlayerPredator)
+                    endPosition = mousePosition;
+                predator.UpdatePredator(endPosition);
+            }
         }
 
         private void CheckForEating()
         {
-            Eat(PlayerCircle);
-            for (int i = 0; i < Bots.Count; i++)
+            for (int i = 0; i < Predators.Count; i++)
             {
-                Eat(Bots[i]);
+                TryEat(eater: Predators[i]);
             }
         }
 
-        private void Eat(Circle eater)
+        public void TryEat(PredatorObject eater)
         {
-            EatFood(eater);
-            EatBot(eater);
-            Player.EatPlayer(eater);
+            TryEatFood(eater);
+            TryEatPredator(eater);
         }
 
-        private void EatFood(Circle eater)
+        private void TryEatFood(PredatorObject eater)
         {
-            foreach (Circle eatable in FoodObjects)
+            foreach (EatableObject eatable in FoodObjects)
             {
                 if (eater.IsObjectInside(eatable))
                 {
-                    eater.IncreaseRadius(eatable.Radius);
+                    eater.Eat(eatable.Radius, foodEaten: 1);
                     eatable.SetRandomPosition();
-                    eater.IncreaseFoodEaten(); 
                 }
             }
         }
 
-        private void EatBot(Circle eater)
+        private void TryEatPredator(PredatorObject eater)
         {
-            for (int i = 0; i < Bots.Count; i++)
+            for (int i = 0; i < Predators.Count; i++)
             {
-                if (eater != Bots[i] && eater.IsObjectInside(Bots[i]))
+                if (eater != Predators[i] && eater.IsObjectInside(Predators[i]))
                 {
-                    eater.IncreaseRadius(Bots[i].Radius);
-                    Bots[i] = null;
-                    DrawableObjects.RemoveAt(i);
-                    Bots.Remove(Bots[i]);
+                    eater.Eat(Predators[i].Radius);
+                    MakePredatorEaten(Predators[i]);
                 }
             }
+        }
+
+        private void MakePredatorEaten(PredatorObject eaten)
+        {
+            DrawableObjects.Remove(eaten);
+            Predators.Remove(eaten);
+            eaten = null;
         }
 
         private void SetTextInGameString() =>
@@ -143,16 +135,16 @@ namespace AgarioSFML
             HasPlayerWon() || Player.HasPlayerLost();
 
         private bool HasPlayerWon() =>
-            Bots.Count == 0;
+            Predators.Count == 1;
 
         public void DrawResults()
         {
             string resultText = DefineResultText();
-            Text ResultText = Instantiation.CreateText(40, resultText, PlayerCircle.FillColor, Heigh / 2 - 40);
+            Text ResultText = Instantiation.CreateText(40, resultText, PlayerPredator.FillColor, Heigh / 2 - 40);
             string foodEatenText = DefineFoodAndBotText();
             Text FoodEatenText = Instantiation.CreateText(40, foodEatenText, Color.White, Heigh / 2 + 40);
 
-            while (!InputController.IsEnterPressed())
+            while (!InputController.IsButtonPressed(Keyboard.Key.Enter))
             {
                 Window.Draw(ResultText);
                 Window.Draw(FoodEatenText);
@@ -169,6 +161,6 @@ namespace AgarioSFML
         }
 
         private string DefineFoodAndBotText() =>
-            $"Food eaten: {PlayerCircle.FoodEaten}, Bots left: {Bots.Count}";
+            $"Food eaten: {PlayerPredator.FoodEaten}, Bots left: {Predators.Count}";
     }
 }

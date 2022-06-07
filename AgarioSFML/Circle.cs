@@ -21,18 +21,7 @@ namespace AgarioSFML
         private const int MovesToChangeDirection = 20;
         private int Moves;
 
-        public int FoodEaten { get; private set; }
-
         private static Random random = new Random();
-
-        public Circle(int radius)
-        {
-            Moves = 0;
-            FoodEaten = 0;
-            FillColor = colors[random.Next(0, colors.Count)];
-            Radius = radius;
-            Origin = new Vector2f(Radius, Radius);
-        }
 
         private List<Color> colors = new List<Color>()
         {
@@ -40,14 +29,26 @@ namespace AgarioSFML
             Color.White, Color.Magenta, Color.Red
         };
 
-        public void SetPosition(Vector2f position)
+        public Circle()
         {
-            if (position.X == 0 && position.Y == 0)
+            Moves = 0;
+        }
+
+        public void CreateCircle(int radius)
+        {
+            FillColor = colors[random.Next(0, colors.Count)];
+            Radius = radius;
+            Origin = new Vector2f(Radius, Radius);
+        }
+
+        public void SetPosition(Vector2f? position)
+        {
+            if (position == null)
             {
                 SetRandomPosition();
                 return;
             }
-            Position = position;
+            Position = (Vector2f)position;
         }
 
         public void SetRandomPosition()
@@ -77,16 +78,22 @@ namespace AgarioSFML
             SetSpeedAndAnchor();
         }
 
-        public void ChangeDirection(Vector2f endPosition)
+        public void ChangeDirection(Vector2f? endPosition = null)
         {
-            Direction = Calculations.ClaculateDirection(Position, endPosition);
+            if (endPosition == null)
+            {
+                ChangeRandomDirection();
+                return;
+            }
+
+            Direction = Calculations.ClaculateDirection(Position, (Vector2f)endPosition);
         }
 
         public void ChangeRandomDirection()
         {
             if (Moves != MovesToChangeDirection) return;
             Moves = 0;
-            
+
             float X = random.Next(-(int)DistancePerMove, (int)DistancePerMove);
             float Y = Calculations.CalculateVectorY(X, DistancePerMove);
 
@@ -136,8 +143,5 @@ namespace AgarioSFML
             float SquaredDistance = Calculations.CalculateSquaredDistance(Position, circle.Position);
             return SquaredDistance <= (Radius - circle.Radius) * (Radius - circle.Radius);
         }
-
-        public void IncreaseFoodEaten() =>
-            FoodEaten++;
     }
 }

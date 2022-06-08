@@ -24,8 +24,5 @@ namespace AgarioSFML
             Predator = newPlayer;
             SetTexture();
         }
-
-        public bool HasPlayerLost() =>
-            Predator == null || Predator.FoodEaten >= Game.FoodAmount + Game.BotsAmount;
     }
 }

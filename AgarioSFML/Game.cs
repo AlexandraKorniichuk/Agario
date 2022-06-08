@@ -17,7 +17,7 @@ namespace AgarioSFML
 
         private RenderWindow Window;
         public const uint Width = 1000, Heigh = 500;
-        public const int BotsAmount = 2, FoodAmount = 50;
+        public const int BotsAmount = 10, FoodAmount = 50;
 
         public Game(RenderWindow window)
         {
@@ -97,17 +97,13 @@ namespace AgarioSFML
                 {
                     eater.Eat(EatableObjects[i].Radius);
                     if (EatableObjects[i] is PredatorObject)
-                        MakePredatorEaten((PredatorObject)EatableObjects[i]);
+                        Instantiation.RemoveFromLists((PredatorObject)EatableObjects[i], this);
                     else
+                    {
                         EatableObjects[i].SetRandomPosition();
+                    }
                 }
             }
-        }
-
-        private void MakePredatorEaten(PredatorObject eaten)
-        {
-            Instantiation.RemoveFromLists(eaten, this);
-            eaten = null;
         }
 
         private void SetTextInGameString() =>
@@ -126,10 +122,13 @@ namespace AgarioSFML
         }
 
         private bool IsEndGame() =>
-            HasPlayerWon() || Player.HasPlayerLost();
+            HasPlayerWon() || HasPlayerLost();
+
+        public bool HasPlayerLost() =>
+            !Predators.Contains(PlayerPredator) || PlayerPredator.FoodEaten >= FoodAmount + BotsAmount;
 
         private bool HasPlayerWon() =>
-            Predators.Count == 1;
+            Predators.Count == 1 && Predators.Contains(PlayerPredator);
 
         public void DrawResults()
         {

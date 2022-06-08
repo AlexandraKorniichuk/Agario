@@ -1,7 +1,6 @@
 ﻿using SFML.System;
 using SFML.Graphics;
 using System.Collections.Generic;
-using System;
 
 namespace AgarioSFML
 {
@@ -13,7 +12,7 @@ namespace AgarioSFML
             circle.CreateCircle((int)radius);
             circle.SetPosition(position);
             circle.SetSpeedAndAnchor();
-            game.DrawableObjects.Add(circle);
+            AddToLists(circle, game);
 
             return circle;
         }
@@ -28,7 +27,7 @@ namespace AgarioSFML
             return objects;
         }
 
-        public static Text CreateText(uint size, string displayedText, Color color, float positionHeigh)
+        public static Text CreateText(uint size, string displayedText, Color color, float positionHeigh, Game game)
         {
             Text text = new Text
             {
@@ -39,7 +38,18 @@ namespace AgarioSFML
                 Font = new Font("BasicText.ttf"),
                 FillColor = color
             };
+            AddToLists(text, game);
             return text;
+        }
+
+        public static void AddToLists<T>(T obj, Game game)
+        {
+            if (obj is Drawable)
+                game.DrawableObjects.Add((Drawable)obj);
+            if (obj is EatableObject eatable)
+                game.EatableObjects.Add(eatable);
+            if (obj is PredatorObject predator)
+                game.Predators.Add(predator);
         }
     }
 }

@@ -11,14 +11,14 @@ namespace AgarioSFML
             FoodEaten = 0;
         }
 
-        public void Eat(float radius, int foodEaten = 0)
+        public void Eat(float radius)
         {
             IncreaseRadius(radius);
-            IncreaseFoodEaten(foodEaten);
+            IncreaseFoodEaten();
         }
 
-        private void IncreaseFoodEaten(int foodEaten) =>
-            FoodEaten += foodEaten;
+        private void IncreaseFoodEaten() =>
+            FoodEaten++;
 
         public void UpdatePredator(Vector2f? endPosition)
         {

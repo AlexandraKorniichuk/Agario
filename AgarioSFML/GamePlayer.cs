@@ -1,14 +1,28 @@
 ﻿using SFML.Graphics;
+using System;
 
 namespace AgarioSFML
 {
     public class GamePlayer
     {
         public PredatorObject Predator;
+        private Texture texture;
 
-        public void MakePlayerDifferent()
+        public GamePlayer()
         {
-            Predator.Texture = new Texture("smile.png"); 
+            texture = new Texture("smile.png");
+        }
+
+        public void SetTexture()
+        {
+            Predator.Texture = texture;
+        }
+
+        public void ChangePlayer(PredatorObject newPlayer)
+        {
+            Predator.Texture = null;
+            Predator = newPlayer;
+            SetTexture();
         }
 
         public bool HasPlayerLost() =>

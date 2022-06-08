@@ -51,5 +51,15 @@ namespace AgarioSFML
             if (obj is PredatorObject predator)
                 game.Predators.Add(predator);
         }
+
+        public static void RemoveFromLists<T>(T obj, Game game)
+        {
+            if (obj is Drawable)
+                game.DrawableObjects.Remove((Drawable)obj);
+            if (obj is EatableObject eatable)
+                game.EatableObjects.Remove(eatable);
+            if (obj is PredatorObject predator)
+                game.Predators.Remove(predator);
+        }
     }
 }

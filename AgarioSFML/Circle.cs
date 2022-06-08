@@ -91,7 +91,7 @@ namespace AgarioSFML
 
         public void ChangeRandomDirection()
         {
-            if (Moves != MovesToChangeDirection) return;
+            if (Moves < MovesToChangeDirection) return;
             Moves = 0;
 
             float X = random.Next(-(int)DistancePerMove, (int)DistancePerMove);

@@ -1,4 +1,5 @@
 ﻿using SFML.System;
+using System.Collections.Generic;
 
 namespace AgarioSFML
 {
@@ -25,6 +26,23 @@ namespace AgarioSFML
             ChangeDirection(endPosition);
             MoveCircle();
             DecreaseRadius();
+        }
+
+        public PredatorObject FindNearestPredator(List<PredatorObject> Predators)
+        {
+            PredatorObject Predator = null;
+            float squaredMinDistance = float.MaxValue;
+            foreach (PredatorObject predator in Predators)
+            {
+                float squaredDistance = Calculations.CalculateSquaredDistance(predator.Position, Position);
+                if (predator != this && squaredMinDistance > squaredDistance)
+                {
+                    squaredMinDistance = squaredDistance;
+                    Predator = predator;
+                }
+
+            }
+            return Predator;
         }
     }
 }

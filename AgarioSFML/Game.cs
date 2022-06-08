@@ -17,7 +17,7 @@ namespace AgarioSFML
 
         private RenderWindow Window;
         public const uint Width = 1000, Heigh = 500;
-        public const int BotsAmount = 10, FoodAmount = 50;
+        public const int BotsAmount = 2, FoodAmount = 50;
 
         public Game(RenderWindow window)
         {
@@ -36,7 +36,7 @@ namespace AgarioSFML
             Player.Predator = PlayerPredator;
             TextInGame = Instantiation.CreateText(20, DefineFoodAndBotText(), Color.White, 30, this);
             
-            Player.MakePlayerDifferent();
+            Player.SetTexture();
             Mouse.SetPosition((Vector2i)PlayerPredator.Position, Window);
 
             GameLoop();
@@ -49,6 +49,7 @@ namespace AgarioSFML
             {
                 Window.DispatchEvents();
 
+                ChangePlayer();
                 Vector2f mousePosition = InputController.GetMousePosition(Window);
                 UpdatePredators(mousePosition);
                 CheckForEating();
@@ -59,6 +60,16 @@ namespace AgarioSFML
                 Window.Display();
                 Window.Clear();
             } while (!IsEndGame());
+        }
+
+        private void ChangePlayer()
+        {
+            if (InputController.IsButtonPressed(Keyboard.Key.R))
+            {
+                PredatorObject NearestBot = PlayerPredator.FindNearestPredator(Predators);
+                PlayerPredator = NearestBot;
+                Player.ChangePlayer(NearestBot);
+            }
         }
 
         private void UpdatePredators(Vector2f mousePosition)
@@ -95,9 +106,7 @@ namespace AgarioSFML
 
         private void MakePredatorEaten(PredatorObject eaten)
         {
-            DrawableObjects.Remove(eaten);
-            Predators.Remove(eaten);
-            EatableObjects.Remove(eaten);
+            Instantiation.RemoveFromLists(eaten, this);
             eaten = null;
         }
 

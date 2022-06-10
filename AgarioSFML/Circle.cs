@@ -110,8 +110,10 @@ namespace AgarioSFML
             Vector2f newDirection = Direction;
             if (squaredDirectionLength > DistancePerMove * DistancePerMove)
             {
-                Vector2f smallerDirection = Calculations.CalculateCollinearVector(Direction, DistancePerMove);
-                smallerDirection = Calculations.MakeVectorCoDirectional(smallerDirection, Direction);
+                Vector2f smallerDirection = new Vector2f();
+                smallerDirection = Calculations.MakeVectorCoDirectional(smallerDirection,
+                    Direction, DistancePerMove);
+
                 newDirection = smallerDirection;
             }
             Move(newDirection);
@@ -124,24 +126,18 @@ namespace AgarioSFML
             Moves++;
         }
 
-        private void ChangePositionIfOutside()
-        {
-            Vector2f vector = Position;
-
-            vector.X = Calculations.Min(vector.X, Game.Width - Radius);
-            vector.X = Calculations.Max(vector.X, Radius);
-
-            vector.Y = Calculations.Min(vector.Y, Game.Heigh - Radius);
-            vector.Y = Calculations.Max(vector.Y, Radius);
-
-            Position = vector;
-        }
+        private void ChangePositionIfOutside() =>
+            Position = Calculations.MakeVectorInside(Position, Radius, 
+                Game.Width - Radius, Game.Heigh - Radius);
 
         public bool IsObjectInside(Circle circle)
         {
+            const float circleInsideSize = 0.8f;
             if (Radius < circle.Radius) return false;
             float SquaredDistance = Calculations.CalculateSquaredDistance(Position, circle.Position);
-            return SquaredDistance <= (Radius - circle.Radius) * (Radius - circle.Radius);
+            float SquaredNeededDistance = (Radius - circleInsideSize * circle.Radius) * 
+                                          (Radius - circleInsideSize * circle.Radius);
+            return SquaredDistance <= SquaredNeededDistance;
         }
     }
 }

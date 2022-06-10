@@ -12,7 +12,7 @@ namespace AgarioSFML
             circle.CreateCircle((int)radius);
             circle.SetPosition(position);
             circle.SetSpeedAndAnchor();
-            AddToLists(circle, game);
+            game.AddToLists(circle);
 
             return circle;
         }
@@ -38,28 +38,8 @@ namespace AgarioSFML
                 Font = new Font("BasicText.ttf"),
                 FillColor = color
             };
-            AddToLists(text, game);
+            game.AddToLists(text);
             return text;
-        }
-
-        public static void AddToLists<T>(T obj, Game game)
-        {
-            if (obj is Drawable)
-                game.DrawableObjects.Add((Drawable)obj);
-            if (obj is EatableObject eatable)
-                game.EatableObjects.Add(eatable);
-            if (obj is PredatorObject predator)
-                game.Predators.Add(predator);
-        }
-
-        public static void RemoveFromLists<T>(T obj, Game game)
-        {
-            if (obj is Drawable drawable)
-                game.DrawableObjects.Remove(drawable);
-            if (obj is EatableObject eatable)
-                game.EatableObjects.Remove(eatable);
-            if (obj is PredatorObject predator)
-                game.Predators.Remove(predator);
         }
     }
 }

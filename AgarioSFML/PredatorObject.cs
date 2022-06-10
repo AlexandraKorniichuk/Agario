@@ -28,7 +28,7 @@ namespace AgarioSFML
             DecreaseRadius();
         }
 
-        public PredatorObject FindNearestPredator(List<PredatorObject> Predators)
+        public PredatorObject FindNearestPredator(in List<PredatorObject> Predators)
         {
             PredatorObject Predator = null;
             float squaredMinDistance = float.MaxValue;

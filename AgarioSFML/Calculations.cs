@@ -11,7 +11,16 @@ namespace AgarioSFML
         public static float ClaculateSquaredLength(Vector2f vector) =>
             vector.X * vector.X + vector.Y * vector.Y;
 
-        public static Vector2f CalculateCollinearVector(Vector2f vector, float length)
+        public static Vector2f MakeVectorCoDirectional(Vector2f vector1, Vector2f vector2, float length)
+        {
+            vector1 = CalculateCollinearVector(vector2, length);
+
+            vector1.X = CheckForDifferentSigns(vector1.X, vector2.X);
+            vector1.Y = CheckForDifferentSigns(vector1.Y, vector2.Y);
+            return vector1;
+        }
+
+        private static Vector2f CalculateCollinearVector(Vector2f vector, float length)
         {
             Vector2f v = new Vector2f(length, 0);
 
@@ -24,15 +33,19 @@ namespace AgarioSFML
             return v;
         }
 
-        public static Vector2f MakeVectorCoDirectional(Vector2f vector1, Vector2f vector2)
-        {
-            vector1.X = CheckForDifferentSigns(vector1.X, vector2.X);
-            vector1.Y = CheckForDifferentSigns(vector1.Y, vector2.Y);
-            return vector1;
-        }
-
         private static float CheckForDifferentSigns(float num1, float num2) =>
             num1 * num2 < 0 ? -1 * num1 : num1;
+
+        public static Vector2f MakeVectorInside(Vector2f vector, float min, float Xmax, float Ymax)
+        {
+            vector.X = Min(vector.X, Xmax);
+            vector.X = Max(vector.X, min);
+
+            vector.Y = Min(vector.Y, Ymax);
+            vector.Y = Max(vector.Y, min);
+
+            return vector;
+        }
 
         public static float Min(float num1, float num2) =>
             num1 > num2 ? num2 : num1;

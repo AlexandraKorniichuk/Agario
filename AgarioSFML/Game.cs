@@ -10,9 +10,9 @@ namespace AgarioSFML
     {
         private GamePlayer Player;
         private PredatorObject PlayerPredator;
-        public List<Drawable> DrawableObjects;
-        public List<EatableObject> EatableObjects;
-        public List<PredatorObject> Predators;
+        private List<Drawable> DrawableObjects;
+        private List<EatableObject> EatableObjects;
+        private List<PredatorObject> Predators;
         private Text TextInGame;
 
         private RenderWindow Window;
@@ -32,7 +32,9 @@ namespace AgarioSFML
         {
             EatableObjects = Instantiation.CreateObjectsList<EatableObject>(this, FoodAmount, Radius.Food);
             Predators = Instantiation.CreateObjectsList<PredatorObject>(this, BotsAmount, Radius.Bot);
-            PlayerPredator = Instantiation.CreateCircleObject<PredatorObject>(this, Radius.Player, new Vector2f (Width / 2, Heigh / 2));
+            PlayerPredator = Instantiation.CreateCircleObject<PredatorObject>(this, Radius.Player,
+                new Vector2f(Width / 2, Heigh / 2));
+
             Player.Predator = PlayerPredator;
             TextInGame = Instantiation.CreateText(20, DefineFoodAndBotText(), Color.White, 30, this);
             
@@ -97,13 +99,31 @@ namespace AgarioSFML
                 {
                     eater.Eat(EatableObjects[i].Radius);
                     if (EatableObjects[i] is PredatorObject)
-                        Instantiation.RemoveFromLists((PredatorObject)EatableObjects[i], this);
+                        RemoveFromLists((PredatorObject)EatableObjects[i]);
                     else
-                    {
                         EatableObjects[i].SetRandomPosition();
-                    }
                 }
             }
+        }
+
+        public void AddToLists<T>(T obj)
+        {
+            if (obj is Drawable drawable)
+                DrawableObjects.Add(drawable);
+            if (obj is EatableObject eatable)
+                EatableObjects.Add(eatable);
+            if (obj is PredatorObject predator)
+                Predators.Add(predator);
+        }
+
+        private void RemoveFromLists<T>(T obj)
+        {
+            if (obj is Drawable drawable)
+                DrawableObjects.Remove(drawable);
+            if (obj is EatableObject eatable)
+                EatableObjects.Remove(eatable);
+            if (obj is PredatorObject predator)
+                Predators.Remove(predator);
         }
 
         private void SetTextInGameString() =>
@@ -125,7 +145,8 @@ namespace AgarioSFML
             HasPlayerWon() || HasPlayerLost();
 
         public bool HasPlayerLost() =>
-            !Predators.Contains(PlayerPredator) || PlayerPredator.FoodEaten >= FoodAmount + BotsAmount;
+            !Predators.Contains(PlayerPredator) || 
+            PlayerPredator.FoodEaten >= FoodAmount + BotsAmount;
 
         private bool HasPlayerWon() =>
             Predators.Count == 1 && Predators.Contains(PlayerPredator);

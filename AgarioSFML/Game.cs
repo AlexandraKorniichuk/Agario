@@ -3,7 +3,6 @@ using SFML.Graphics;
 using SFML.Window;
 using System.Threading;
 using System.Collections.Generic;
-using System;
 
 namespace AgarioSFML
 {
@@ -116,7 +115,7 @@ namespace AgarioSFML
                 {
                     if (EatableObjects[i] is Bullet bullet)
                     {
-                        if (bullet.Shooter == eater) break;
+                        if (bullet.Shooter == eater) continue;
                         eater.EatBullet();
                         RemoveFromLists((Bullet)EatableObjects[i]);
                     }

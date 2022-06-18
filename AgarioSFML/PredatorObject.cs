@@ -18,10 +18,15 @@ namespace AgarioSFML
             IncreaseFoodEaten();
         }
 
+        public void EatBullet()
+        {
+            Radius *= 0.9f;
+        }
+
         private void IncreaseFoodEaten() =>
             FoodEaten++;
 
-        public void UpdatePredator(Vector2f? endPosition)
+        public virtual void UpdateObject(Vector2f? endPosition)
         {
             ChangeDirection(endPosition);
             MoveCircle();

@@ -11,12 +11,13 @@ namespace AgarioSFML
         Player = 30,
         Bot = 20,
         Food = 7,
+        Bullet = 5,
         Min = 20
     }
 
     public class Circle : CircleShape
     {
-        private Vector2f Direction;
+        public Vector2f Direction { get; protected set; }
         private float DistancePerMove;
         private const int MovesToChangeDirection = 20;
         private int Moves;

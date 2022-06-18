@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.Window;
 using System.Threading;
 using System.Collections.Generic;
+using System;
 
 namespace AgarioSFML
 {
@@ -22,6 +23,8 @@ namespace AgarioSFML
         public Game(RenderWindow window)
         {
             Window = window;
+            Window.KeyPressed += InputKey;
+
             Player = new GamePlayer();
             DrawableObjects = new List<Drawable>();
             EatableObjects = new List<EatableObject>();
@@ -43,6 +46,7 @@ namespace AgarioSFML
 
             GameLoop();
             DrawableObjects.Clear();
+            Window.KeyPressed -= InputKey;
         }
 
         private void GameLoop()
@@ -51,7 +55,6 @@ namespace AgarioSFML
             {
                 Window.DispatchEvents();
 
-                ChangePlayer();
                 Vector2f mousePosition = InputController.GetMousePosition(Window);
                 UpdatePredators(mousePosition);
                 CheckForEating();
@@ -64,14 +67,28 @@ namespace AgarioSFML
             } while (!IsEndGame());
         }
 
+        private void InputKey(object sender, KeyEventArgs KEA)
+        {
+            Key key = Converting.GetKey(KEA);
+
+            if (key == Key.Shoot)
+                Shoot(PlayerPredator);
+            if (key == Key.ChangePlayer)
+                ChangePlayer();
+        }
+
+        private void Shoot(PredatorObject predator)
+        {
+            Bullet bullet = Instantiation.CreateCircleObject<Bullet>(this, Radius.Bullet, predator.Position);
+            bullet.Init(predator);
+            predator.DecreaseRadius();
+        }
+
         private void ChangePlayer()
         {
-            if (InputController.IsButtonPressed(Keyboard.Key.R))
-            {
-                PredatorObject NearestBot = PlayerPredator.FindNearestPredator(Predators);
-                PlayerPredator = NearestBot;
-                Player.ChangePlayer(NearestBot);
-            }
+            PredatorObject NearestBot = PlayerPredator.FindNearestPredator(Predators);
+            PlayerPredator = NearestBot;
+            Player.ChangePlayer(NearestBot);
         }
 
         private void UpdatePredators(Vector2f mousePosition)
@@ -81,7 +98,7 @@ namespace AgarioSFML
                 Vector2f? endPosition = null;
                 if (predator == PlayerPredator)
                     endPosition = mousePosition;
-                predator.UpdatePredator(endPosition);
+                predator.UpdateObject(endPosition);
             }
         }
 
@@ -97,11 +114,22 @@ namespace AgarioSFML
             {
                 if (eater.IsObjectInside(EatableObjects[i]) && eater != EatableObjects[i])
                 {
-                    eater.Eat(EatableObjects[i].Radius);
-                    if (EatableObjects[i] is PredatorObject)
+                    if (EatableObjects[i] is Bullet bullet)
+                    {
+                        if (bullet.Shooter == eater) break;
+                        eater.EatBullet();
+                        RemoveFromLists((Bullet)EatableObjects[i]);
+                    }
+                    else if (EatableObjects[i] is PredatorObject)
+                    {
+                        eater.Eat(EatableObjects[i].Radius);
                         RemoveFromLists((PredatorObject)EatableObjects[i]);
+                    }
                     else
+                    {
+                        eater.Eat(EatableObjects[i].Radius);
                         EatableObjects[i].SetRandomPosition();
+                    }
                 }
             }
         }
@@ -144,12 +172,23 @@ namespace AgarioSFML
         private bool IsEndGame() =>
             HasPlayerWon() || HasPlayerLost();
 
-        public bool HasPlayerLost() =>
+        private bool HasPlayerLost() =>
             !Predators.Contains(PlayerPredator) || 
             PlayerPredator.FoodEaten >= FoodAmount + BotsAmount;
 
         private bool HasPlayerWon() =>
-            Predators.Count == 1 && Predators.Contains(PlayerPredator);
+            CountPredators() == 1 && Predators.Contains(PlayerPredator);
+
+        private int CountPredators()
+        {
+            int bulletCount = 0;
+            foreach (PredatorObject predator in Predators)
+            {
+                if (predator is Bullet)
+                    bulletCount++;
+            }
+            return Predators.Count - bulletCount;
+        }
 
         public void DrawResults()
         {

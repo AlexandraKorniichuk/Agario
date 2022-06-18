@@ -12,4 +12,11 @@ namespace AgarioSFML
         public static bool IsButtonPressed(Keyboard.Key key) =>
             Keyboard.IsKeyPressed(key);
     }
+
+    public enum Key
+    {
+        ChangePlayer,
+        Shoot,
+        Other
+    }
 }

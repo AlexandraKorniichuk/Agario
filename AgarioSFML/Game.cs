@@ -55,7 +55,7 @@ namespace AgarioSFML
                 Window.DispatchEvents();
 
                 Vector2f mousePosition = InputController.GetMousePosition(Window);
-                UpdatePredators(mousePosition);
+                UpdateMovingObjects(mousePosition);
                 CheckForEating();
                 SetTextInGameString();
                 Draw();
@@ -66,9 +66,9 @@ namespace AgarioSFML
             } while (!IsEndGame());
         }
 
-        private void InputKey(object sender, KeyEventArgs KEA)
+        private void InputKey(object sender, KeyEventArgs keyEventArgs)
         {
-            Key key = Converting.GetKey(KEA);
+            Key key = Converting.GetKey(keyEventArgs);
 
             if (key == Key.Shoot)
                 Shoot(PlayerPredator);
@@ -90,14 +90,17 @@ namespace AgarioSFML
             Player.ChangePlayer(NearestBot);
         }
 
-        private void UpdatePredators(Vector2f mousePosition)
+        private void UpdateMovingObjects(Vector2f mousePosition)
         {
-            foreach (PredatorObject predator in Predators)
+            foreach (Drawable drawable in DrawableObjects)
             {
-                Vector2f? endPosition = null;
-                if (predator == PlayerPredator)
-                    endPosition = mousePosition;
-                predator.UpdateObject(endPosition);
+                if (drawable is IUpdatable updatable)
+                {
+                    Vector2f? endPosition = null;
+                    if (updatable == PlayerPredator)
+                        endPosition = mousePosition;
+                    updatable.Update(endPosition);
+                }
             }
         }
 

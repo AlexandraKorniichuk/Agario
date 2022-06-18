@@ -2,7 +2,7 @@
 
 namespace AgarioSFML
 {
-    public class Bullet : PredatorObject
+    public class Bullet : EatableObject, IUpdatable
     {
         public PredatorObject Shooter;
 
@@ -12,7 +12,12 @@ namespace AgarioSFML
             Direction = predator.Direction;
         }
 
-        public override void UpdateObject(Vector2f? endPosition) =>
+        public void Update(Vector2f? endPosition) =>
             MoveCircle();
+    }
+
+    public interface IUpdatable
+    {
+        void Update(Vector2f? endPosition);
     }
 }

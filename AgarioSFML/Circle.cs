@@ -15,7 +15,7 @@ namespace AgarioSFML
         Min = 20
     }
 
-    public class Circle : CircleShape
+    public abstract class Circle : CircleShape
     {
         public Vector2f Direction { get; protected set; }
         private float DistancePerMove;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AgarioSFML
 {
-    public class PredatorObject : EatableObject
+    public class PredatorObject : EatableObject, IUpdatable
     {
         public int FoodEaten { get; private set; }
 
@@ -18,15 +18,13 @@ namespace AgarioSFML
             IncreaseFoodEaten();
         }
 
-        public void EatBullet()
-        {
+        public void EatBullet() =>
             Radius *= 0.9f;
-        }
 
         private void IncreaseFoodEaten() =>
             FoodEaten++;
 
-        public virtual void UpdateObject(Vector2f? endPosition)
+        public void Update(Vector2f? endPosition)
         {
             ChangeDirection(endPosition);
             MoveCircle();

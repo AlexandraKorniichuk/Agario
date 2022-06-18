@@ -109,28 +109,34 @@ namespace AgarioSFML
 
         private void TryEat(PredatorObject eater)
         {
-            for (int i = 0; i < EatableObjects.Count; i++)
+            List<EatableObject> Deletable = new List<EatableObject>();
+            foreach (EatableObject eatable in EatableObjects)
             {
-                if (eater.IsObjectInside(EatableObjects[i]) && eater != EatableObjects[i])
+                if (eater.IsObjectInside(eatable) && eater != eatable)
                 {
-                    if (EatableObjects[i] is Bullet bullet)
+                    switch (eatable)
                     {
-                        if (bullet.Shooter == eater) continue;
-                        eater.EatBullet();
-                        RemoveFromLists((Bullet)EatableObjects[i]);
-                    }
-                    else if (EatableObjects[i] is PredatorObject)
-                    {
-                        eater.Eat(EatableObjects[i].Radius);
-                        RemoveFromLists((PredatorObject)EatableObjects[i]);
-                    }
-                    else
-                    {
-                        eater.Eat(EatableObjects[i].Radius);
-                        EatableObjects[i].SetRandomPosition();
+                        case Bullet bullet:
+                            if (bullet.Shooter == eater) break;
+                            eater.EatBullet();
+                            Deletable.Add(bullet);
+                            break;
+
+                        case PredatorObject predator:
+                            eater.Eat(predator.Radius);
+                            Deletable.Add(predator);
+                            break;
+
+                        default:
+                            eater.Eat(eatable.Radius);
+                            eatable.SetRandomPosition();
+                            break;
                     }
                 }
             }
+
+            foreach (EatableObject deletable in Deletable)
+                RemoveFromLists(deletable);
         }
 
         public void AddToLists<T>(T obj)

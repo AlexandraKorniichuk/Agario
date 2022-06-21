@@ -66,10 +66,10 @@ namespace AgarioSFML
             Origin = new Vector2f(Radius, Radius);
         }
 
-        public void DecreaseRadius()
+        public void DecreaseRadius(float percentage = 0.999f)
         {
             if (Radius <= (int)AgarioSFML.Radius.Min) return;
-            Radius *= 0.999f;
+            Radius *= percentage;
             SetSpeedAndAnchor();
         }
 

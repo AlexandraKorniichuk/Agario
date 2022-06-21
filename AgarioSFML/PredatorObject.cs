@@ -19,7 +19,7 @@ namespace AgarioSFML
         }
 
         public void EatBullet() =>
-            Radius *= 0.9f;
+            DecreaseRadius(0.9f);
 
         private void IncreaseFoodEaten() =>
             FoodEaten++;

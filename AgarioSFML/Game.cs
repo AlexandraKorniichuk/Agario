@@ -3,6 +3,7 @@ using SFML.Graphics;
 using SFML.Window;
 using System.Threading;
 using System.Collections.Generic;
+using System;
 
 namespace AgarioSFML
 {
@@ -16,18 +17,22 @@ namespace AgarioSFML
         private Text TextInGame;
 
         private RenderWindow Window;
-        public const uint Width = 1000, Heigh = 500;
-        public const int BotsAmount = 10, FoodAmount = 50;
+        public static int Width, Heigh;
+        public static int BotsAmount, FoodAmount;
 
-        public Game(RenderWindow window)
+        public Game()
         {
-            Window = window;
-            Window.KeyPressed += InputKey;
-
             Player = new GamePlayer();
             DrawableObjects = new List<Drawable>();
             EatableObjects = new List<EatableObject>();
             Predators = new List<PredatorObject>();
+        }
+
+        public void PostLoad()
+        {
+            Window = new RenderWindow(new VideoMode((uint)Width, (uint)Heigh), "Agario");
+            Window.Closed += WindowClosed;
+            Window.KeyPressed += InputKey;
         }
 
         public void StartNewGame()
@@ -185,18 +190,7 @@ namespace AgarioSFML
             PlayerPredator.FoodEaten >= FoodAmount + BotsAmount;
 
         private bool HasPlayerWon() =>
-            CountPredators() == 1 && Predators.Contains(PlayerPredator);
-
-        private int CountPredators()
-        {
-            int bulletCount = 0;
-            foreach (PredatorObject predator in Predators)
-            {
-                if (predator is Bullet)
-                    bulletCount++;
-            }
-            return Predators.Count - bulletCount;
-        }
+            Predators.Count == 1 && Predators.Contains(PlayerPredator);
 
         public void DrawResults()
         {
@@ -228,5 +222,11 @@ namespace AgarioSFML
 
         private string DefineFoodAndBotText() =>
             $"Food eaten: {PlayerPredator.FoodEaten}, Bots left: {Predators.Count - 1}";
+
+        private void WindowClosed(object sender, EventArgs e)
+        {
+            RenderWindow w = (RenderWindow)sender;
+            w.Close();
+        }
     }
 }

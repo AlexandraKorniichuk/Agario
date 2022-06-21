@@ -8,17 +8,11 @@ namespace AgarioSFML
     {
         static void Main(string[] args)
         {
-            RenderWindow window = new RenderWindow(new VideoMode(Game.Width, Game.Heigh), "Agario");
-            window.Closed += WindowClosed;
-            Game game = new Game(window);
+            Game game = new Game();
+            Settings.LoadSettings(game);
+            game.PostLoad();
             game.StartNewGame();
             game.DrawResults();
-        }
-
-        static void WindowClosed(object sender, EventArgs e)
-        {
-            RenderWindow w = (RenderWindow)sender;
-            w.Close();
         }
     }
 }

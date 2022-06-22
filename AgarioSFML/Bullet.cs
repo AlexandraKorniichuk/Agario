@@ -15,9 +15,4 @@ namespace AgarioSFML
         public void Update(Vector2f? endPosition) =>
             MoveCircle();
     }
-
-    public interface IUpdatable
-    {
-        void Update(Vector2f? endPosition);
-    }
 }

@@ -42,4 +42,9 @@ namespace AgarioSFML
             return text;
         }
     }
+
+    public interface IUpdatable
+    {
+        void Update(Vector2f? endPosition);
+    }
 }

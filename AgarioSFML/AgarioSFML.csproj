@@ -66,6 +66,7 @@
     <Compile Include="GamePlayer.cs" />
     <Compile Include="InputController.cs" />
     <Compile Include="Instantiation.cs" />
+    <Compile Include="IUpdatable.cs" />
     <Compile Include="PredatorObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

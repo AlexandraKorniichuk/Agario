@@ -1,8 +1,4 @@
-﻿using SFML.Graphics;
-using SFML.Window;
-using System;
-
-namespace AgarioSFML
+﻿namespace AgarioSFML
 {
     internal class Program
     {
